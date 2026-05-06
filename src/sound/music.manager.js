@@ -3,23 +3,20 @@ export class MusicManager {
         this.audio = null;
     }
 
-play(src, volume = 0.3) {
+play(src, volume = 1) {
 
-    if (this.audio) return;
+    // 🔥 crear audio si no existe
+    if (!this.audio) {
+        this.audio = new Audio();
+    }
 
-    this.audio = new Audio(src);
+    this.audio.src = src;
     this.audio.loop = true;
-    this.audio.volume = 0;
 
-    this.audio.play();
+    // 🔥 evita error de null
+    this.audio.volume = volume ?? 1;
 
-    const fade = setInterval(() => {
-        if (this.audio.volume < volume) {
-            this.audio.volume += 0.01;
-        } else {
-            clearInterval(fade);
-        }
-    }, 100);
+    this.audio.play().catch(() => {});
 }
 setVolume(value) {
     if (this.audio) {

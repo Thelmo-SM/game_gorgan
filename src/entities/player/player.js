@@ -90,32 +90,32 @@ this.hasHit = false;
                 maxFrames: 22,
                 right: newSprite(spriteStandRight),
                 left: newSprite(spriteStandLeft),
-                renderW: 400,
-                renderH: 300
+                renderW: 360,
+                renderH: 250
             },
             run: {
                 cropWidth: 571,
                 maxFrames: 22,
                 right: newSprite(spriteRunRight),
                 left: newSprite(spriteRunLeft),
-                renderW: 400,
-                renderH: 300
+                renderW: 360,
+                renderH: 250
             },
             jump: {
                 cropWidth: 571,
                 maxFrames: 8,
                 right: newSprite(spriteJumpRight),
                 left: newSprite(spriteJumpLeft),
-                renderW: 400,
-                renderH: 300
+                renderW: 360,
+                renderH: 250
             },
             fall: {
                 cropWidth: 571,
                 maxFrames: 6,
                 right: newSprite(spriteFallRight),
                 left: newSprite(spriteFallLeft),
-                renderW: 400,
-                renderH: 300
+                renderW: 360,
+                renderH: 250
             },
             attack1: {
                 cropWidth: 571,
@@ -123,8 +123,8 @@ this.hasHit = false;
                 right: newSprite(spriteAttack1Right),
                 left: newSprite(spriteAttack1Left),
                 frameDelay: 2,
-                renderW: 375,
-                renderH: 300
+                renderW: 335,
+                renderH: 250
             },
             attack2: {
                 cropWidth: 571,
@@ -132,8 +132,8 @@ this.hasHit = false;
                 right: newSprite(spriteAttack2Right),
                 left: newSprite(spriteAttack2Left),
                 frameDelay: 4,
-                renderW: 375,
-                renderH: 300
+                renderW: 335,
+                renderH: 250
             },
             attack3: {
                 cropWidth: 571,
@@ -141,16 +141,16 @@ this.hasHit = false;
                 right: newSprite(spriteAttack3Right),
                 left: newSprite(spriteAttack3Left),
                 frameDelay: 2,
-                renderW: 375,
-                renderH: 300
+                renderW: 335,
+                renderH: 250
             },
             dead: {
     cropWidth: 571,
     maxFrames: 32,
     //right: newSprite(deadRight), if (this.direction === 'left') {
     left: newSprite(deadLeft),
-    renderW: 400,
-    renderH: 300
+    renderW: 360,
+    renderH: 250
 }
         };
 

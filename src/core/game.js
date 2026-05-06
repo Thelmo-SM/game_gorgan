@@ -68,7 +68,7 @@ export class Game {
         this.playerFaceImg.src = playerFace;
 
         this.platforms = [];
-        this.worldX = -38000;
+        this.worldX = -36000;
         //this.worldX = -2000;
         //this.worldX = -7000;
         this.scrollSpeed = 5;
@@ -160,11 +160,13 @@ this.menu = new Menu({
     onSelect: (option) => {
         if (option === 'INICIAR JUEGO') {
 
-            // 🔥 detener música del menú
-            this.music.stop();
+        this.music.stop();
 
-            // 🔥 desbloquear sonidos del juego
-            this.soundManager.unlock();
+        // 🔥 desbloquear sonidos
+        this.soundManager.unlock();
+
+        // 🔥 AQUÍ VA EL BACKGROUND SOUND
+        this.music.play(bgMusic, 0.4);
 
             this.gameState = 'PLAYING';
         }
@@ -371,6 +373,17 @@ this.floatingPlatforms = [];
 this.floatingPlatforms.push(
     new Platform({
         x: 18000,
+        y: this.groundY - 400,
+        image: floatingRock,
+
+        collisionOffsetX: 120,   // 🔥 recorta lados
+        collisionWidth: 160,     // 🔥 más estrecha
+
+        collisionOffsetY: 30,
+        collisionHeight: 40      // 🔥 solo la parte superior
+    }),
+        new Platform({
+        x: 36800,
         y: this.groundY - 400,
         image: floatingRock,
 
