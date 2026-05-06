@@ -148,13 +148,13 @@ if (!this.loaded) {
 }
 
 
-context.strokeStyle = 'red';
-context.strokeRect(
-    this.position.x + worldX,
-    this.position.y,
-    this.width,
-    this.height
-);
+// context.strokeStyle = 'red';
+// context.strokeRect(
+//     this.position.x + worldX,
+//     this.position.y,
+//     this.width,
+//     this.height
+// );
 
     const cropWidth = sprite.width / spriteConfig.maxFrames;
     const cropHeight = sprite.height;
@@ -220,13 +220,13 @@ context.strokeRect(
     context.restore();
 
     // 🔴 HITBOX DEBUG
-    context.strokeStyle = 'red';
-    context.strokeRect(
-        this.position.x + worldX,
-        this.position.y + this.hitbox.offsetY,
-        this.width,
-        this.hitbox.height
-    );
+    // context.strokeStyle = 'red';
+    // context.strokeRect(
+    //     this.position.x + worldX,
+    //     this.position.y + this.hitbox.offsetY,
+    //     this.width,
+    //     this.hitbox.height
+    // );
 
     // ❤️ VIDA ENCIMA
     if (!this.isDead) {

@@ -19,6 +19,7 @@ import { SoundManager } from '../sound/sound.manager.js';
 import { SpikeTrap } from '../entities/traps/trap-1.js';
 import { PendulumTrap } from '../entities/traps/trap-2.js';
 import { renderFog } from '../render/fog.renderer.js';
+import { Menu } from './Menu.js';
 
 import ground1 from '../../assets/tiles/ground_1.png';
 import ground2 from '../../assets/tiles/ground_2.png';
@@ -53,6 +54,7 @@ import fogImage from '../../assets/environment/nieblas.png';
 
 //SONIDOS  
 import bgMusic from '../../assets/sounds/backgroundSound.wav';
+import menuMusic from '../../assets/sounds/menuSound.wav';
 
 
 export class Game {
@@ -66,7 +68,7 @@ export class Game {
         this.playerFaceImg.src = playerFace;
 
         this.platforms = [];
-        this.worldX = -2000;
+        this.worldX = -38000;
         //this.worldX = -2000;
         //this.worldX = -7000;
         this.scrollSpeed = 5;
@@ -106,6 +108,9 @@ export class Game {
         //SOPNIDOS
         this.audioUnlocked = false;
         this.music = new MusicManager();
+
+        this.menuMusicStarted = false;
+
         //PASOS DEL PLAYER
         this.sounds = createSounds();
         this.soundManager = new SoundManager(this.sounds);
@@ -137,12 +142,42 @@ export class Game {
         //NIEBLAS
         this.fogImage = new Image();
         this.fogImage.src = fogImage;
+
+        //MENU
+        this.gameState = 'MENU';
         
     }
 
     init() {
+
+        
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+    //MENU DEL JUEGO
+this.menu = new Menu({
+    canvas: this.canvas,
+    c: this.c,
+    onSelect: (option) => {
+        if (option === 'INICIAR JUEGO') {
+
+            // 🔥 detener música del menú
+            this.music.stop();
+
+            // 🔥 desbloquear sonidos del juego
+            this.soundManager.unlock();
+
+            this.gameState = 'PLAYING';
+        }
+
+        if (option === 'OPCIONES') {
+            console.log('Opciones');
+        }
+
+        if (option === 'CREDITOS') {
+            console.log('Creditos');
+        }
+    }
+});
 
         handleInput(this.player);
 
@@ -174,9 +209,40 @@ const plantX = 7500;
 
 this.enemies.push(
     new Enemy({
-        x: plantX + 1700, // 👈 justo al lado de la planta
+        x: plantX + 1700,
         y: this.groundY,
         type: 'TANK',
+        soundManager: this.soundManager
+    }),
+
+    new Enemy({
+        x: plantX + 4220,
+        y: this.groundY,
+        type: 'SLIME',
+        soundManager: this.soundManager
+    }),
+        new Enemy({
+        x: plantX + 8000,
+        y: this.groundY,
+        type: 'FAST',
+        soundManager: this.soundManager
+    }),
+        new Enemy({
+        x: plantX + 15000,
+        y: this.groundY,
+        type: 'FAST',
+        soundManager: this.soundManager
+    }),
+        new Enemy({
+        x: plantX + 19000,
+        y: this.groundY,
+        type: 'FAST',
+        soundManager: this.soundManager
+    }),
+        new Enemy({
+        x: plantX + 21000,
+        y: this.groundY,
+        type: 'FAST',
         soundManager: this.soundManager
     })
 );
@@ -194,7 +260,7 @@ this.enemies.push(
 );
 
 this.enemies.push(
-   // new Enemy({ x: 800, y: this.groundY, type: 'SLIME' }),
+   new Enemy({ x: 800, y: this.groundY, type: 'SLIME' }),
    // new Enemy({ x: 1200, y: this.groundY, type: 'FAST' }),
    //new Enemy({ x: plantX - 100, y: this.groundY, type: 'TANK' }),
    
@@ -410,7 +476,7 @@ window.addEventListener('click', () => {
 
     this.soundManager.unlock();
 
-    this.music.play(bgMusic, 0.90);
+    //this.music.play(bgMusic, 0.90);
 }, { once: true });
 
 
@@ -428,8 +494,37 @@ window.addEventListener('click', () => {
     animate() {
         requestAnimationFrame(() => this.animate());
         
-        //MOVIMIENTO DEL AGUA DEL LAGO
         this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    //MENU DEL JUEGO
+    // ✅ MENU
+if (this.gameState === 'MENU') {
+
+    // 🔥 MÚSICA DEL MENÚ
+    if (!this.menuMusicStarted) {
+        this.music.play(menuMusic, 0.3);
+        this.menuMusicStarted = true;
+    }
+
+    this.menu.update(keys);
+    this.menu.draw();
+    return;
+}
+
+if (this.gameState === 'PLAYING' && this.player.position.x - this.worldX >= 39000) {
+    this.music.stop();
+    this.gameState = 'END';
+}
+// ✅ END GAME
+if (this.gameState === 'END') {
+    this.drawEndScreen();
+    this.handleEndInput(keys);
+    return;
+}
+
+
+
+        //MOVIMIENTO DEL AGUA DEL LAGO
         this.waveOffset += 0.02;
 
     const player = this.player;
@@ -455,6 +550,10 @@ window.addEventListener('click', () => {
             this.worldX += this.scrollSpeed;
         }
     }
+// 🔥 FIN DEL JUEGO (IMPORTANTE: debajo del movimiento)
+if (this.player.position.x - this.worldX >= 39000) {
+    this.gameState = 'END';
+}
 
     // 🌌 FONDO
 // 🌌 FONDO (MUY LEJANO)
@@ -724,9 +823,15 @@ if (hit) {
     // =========================
     // 🔥 ENEMIGOS (INDEPENDIENTE)
     // =========================
-    this.enemies.forEach(enemy => {
+this.enemies.forEach(enemy => {
+
+    const screenX = enemy.position.x + this.worldX;
+
+    // 🔥 SOLO PROCESA SI ESTÁ EN PANTALLA
+    if (screenX > -500 && screenX < this.canvas.width + 500) {
         enemy.update(this.c, this.worldX, player);
-    });
+    }
+});
 
 // =========================
 // ⚔️ ATAQUE DEL PLAYER
@@ -846,4 +951,48 @@ const hit =
     this.c.strokeStyle = 'gray';
     this.c.strokeRect(x, y, barWidth, barHeight);
 }
+
+drawEndScreen() {
+    const c = this.c;
+
+    c.fillStyle = 'rgba(0,0,0,0.8)';
+    c.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+
+    c.font = '80px GameFont';
+    c.fillStyle = 'white';
+    c.fillText('FIN DE LA DEMO', this.canvas.width / 2, this.canvas.height / 2 - 80);
+
+    c.font = '30px GameFont';
+    c.fillText('Gracias por jugar', this.canvas.width / 2, this.canvas.height / 2);
+
+    c.font = '25px GameFont';
+    c.fillStyle = 'gray';
+    c.fillText('Presiona ENTER para volver al menú', this.canvas.width / 2, this.canvas.height / 2 + 80);
 }
+
+handleEndInput(keys) {
+    if (keys.enter?.pressed) {
+
+        this.resetGame();
+        this.gameState = 'MENU';
+
+        keys.enter.pressed = false;
+        this.music.play(menuMusic, 0.3);
+    }
+}
+
+resetGame() {
+    this.worldX = -2000;
+
+    this.player.position.x = 100;
+    this.player.position.y = 0;
+
+    this.player.hp = 100;
+    this.player.isDead = false;
+}
+
+}
+

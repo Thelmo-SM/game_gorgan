@@ -20,6 +20,9 @@ import spiderWhisper from '../../assets/sounds/bjEnemy/susurro.wav';
 import trapSound from '../../assets/sounds/trapsSound/trampa_1.wav';
 import pendulumLoop from '../../assets/sounds/trapsSound/trampa_2.wav';
 
+//MENU
+import menuMusic from '../../assets/sounds/menuSound.wav';
+
 export const createSounds = () => {
 
     const steps = [
@@ -43,6 +46,8 @@ export const createSounds = () => {
     const trapAction = new Audio(trapSound);
     const pendulumSound = new Audio(pendulumLoop);
 
+    const menu = new Audio(menuMusic);
+
     return {
         // PLAYER
         steps,
@@ -62,6 +67,9 @@ export const createSounds = () => {
 
         //TRAPS
         trapAction: trapAction,
-        pendulumSound
+        pendulumSound,
+        
+        // 🎧 MENU
+        menu
     };
 };
