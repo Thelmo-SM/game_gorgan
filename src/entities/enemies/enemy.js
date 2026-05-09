@@ -365,32 +365,44 @@ if (!this.whisperSound && this.soundManager) {
 
 // 🔥 INTENTAR REPRODUCIR SIEMPRE (cuando se pueda)
 if (this.whisperSound && this.soundManager?.unlocked) {
-    if (this.whisperSound.paused) {
-        this.whisperSound.play().catch(() => {});
-    }
-}
-if (this.whisperSound && this.soundManager?.unlocked) {
 
     const enemyX = this.position.x + worldX;
     const playerX = player.position.x;
 
     const distance = Math.abs(playerX - enemyX);
 
-    const maxDistance = 2000; // 🔥 rango donde empieza a oírse
-    const minDistance = 100; // 🔥 máximo volumen
+    const maxDistance = 2000;
+    const minDistance = 100;
 
     let volume = 0;
 
     if (distance < maxDistance) {
-        volume = 1 - (distance - minDistance) / (maxDistance - minDistance);
+        volume =
+            1 - ((distance - minDistance) / (maxDistance - minDistance));
     }
 
     // clamp
     volume = Math.max(0, Math.min(volume, 1));
 
-    // 🔊 volumen final
-    this.whisperSound.volume =
+    // 🔥 volumen final
+    const finalVolume =
         volume * this.soundManager.masterVolume * 0.3;
+
+    this.whisperSound.volume = finalVolume;
+
+    // 🔥 reproducir SOLO si hay volumen
+    if (finalVolume > 0.01) {
+
+        if (this.whisperSound.paused) {
+            this.whisperSound.play().catch(() => {});
+        }
+
+    } else {
+
+        // 🔥 detener si está lejos
+        this.whisperSound.pause();
+        this.whisperSound.currentTime = 0;
+    }
 }
 
 }

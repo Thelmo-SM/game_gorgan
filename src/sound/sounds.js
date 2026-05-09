@@ -1,27 +1,27 @@
-import step1 from '../../assets/sounds/playerSounds/paso_1.wav';
-import step2 from '../../assets/sounds/playerSounds/paso_2.wav';
-import step3 from '../../assets/sounds/playerSounds/paso_3.wav';
+import step1 from '../../assets/sounds/playerSounds/paso_1.mp3';
+import step2 from '../../assets/sounds/playerSounds/paso_2.mp3';
+import step3 from '../../assets/sounds/playerSounds/paso_3.mp3';
 
-import attackSound from '../../assets/sounds/playerSounds/ataque_player.wav';
-import jumpSound from '../../assets/sounds/playerSounds/salto.wav';
-import deathSound from '../../assets/sounds/playerSounds/muerte.wav';
+import attackSound from '../../assets/sounds/playerSounds/ataque_player.mp3';
+import jumpSound from '../../assets/sounds/playerSounds/salto.mp3';
+import deathSound from '../../assets/sounds/playerSounds/muerte.mp3';
 
 // LASER
-import laserShoot from '../../assets/sounds/laserEnemy/laser.wav';
-import laserCharge from '../../assets/sounds/laserEnemy/enemy.wav';
+import laserShoot from '../../assets/sounds/laserEnemy/laser.mp3';
+import laserCharge from '../../assets/sounds/laserEnemy/enemy.mp3';
 
 // SPIDER
-import spiderStep from '../../assets/sounds/bjEnemy/pasos.wav';
-import spiderAttack from '../../assets/sounds/bjEnemy/ataque.wav';
-import spiderDeath from '../../assets/sounds/bjEnemy/muerte.wav';
-import spiderWhisper from '../../assets/sounds/bjEnemy/susurro.wav';
+import spiderStep from '../../assets/sounds/bjEnemy/pasos.mp3';
+import spiderAttack from '../../assets/sounds/bjEnemy/ataque.mp3';
+import spiderDeath from '../../assets/sounds/bjEnemy/muerte.mp3';
+import spiderWhisper from '../../assets/sounds/bjEnemy/susurro.mp3';
 
 //TRAPS
-import trapSound from '../../assets/sounds/trapsSound/trampa_1.wav';
-import pendulumLoop from '../../assets/sounds/trapsSound/trampa_2.wav';
+import trapSound from '../../assets/sounds/trapsSound/trampa_1.mp3';
+import pendulumLoop from '../../assets/sounds/trapsSound/trampa_2.mp3';
 
 //MENU
-import menuMusic from '../../assets/sounds/menuSound.wav';
+import menuMusic from '../../assets/sounds/menuSound.mp3';
 
 export const createSounds = () => {
 

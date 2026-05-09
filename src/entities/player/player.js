@@ -1,28 +1,28 @@
 // MOVIMIENTO
-import spriteRunLeft from '../../../assets/sprites/player/run_right.png';
-import spriteRunRight from '../../../assets/sprites/player/run_left.png';
+import spriteRunLeft from '../../../assets/sprites/player/run_right.webp';
+import spriteRunRight from '../../../assets/sprites/player/run_left.webp';
 
 // IDLE
-import spriteStandLeft from '../../../assets/sprites/player/idle_right.png';
-import spriteStandRight from '../../../assets/sprites/player/idle_left.png';
+import spriteStandLeft from '../../../assets/sprites/player/idle_right.webp';
+import spriteStandRight from '../../../assets/sprites/player/idle_left.webp';
 
 // JUMP
-import spriteJumpLeft from '../../../assets/sprites/player/jump1_right.png';
-import spriteJumpRight from '../../../assets/sprites/player/jump1_left.png';
+import spriteJumpLeft from '../../../assets/sprites/player/jump1_right.webp';
+import spriteJumpRight from '../../../assets/sprites/player/jump1_left.webp';
 
 // FALL
-import spriteFallLeft from '../../../assets/sprites/player/jump2_right.png';
-import spriteFallRight from '../../../assets/sprites/player/jump2_left.png';
+import spriteFallLeft from '../../../assets/sprites/player/jump2_right.webp';
+import spriteFallRight from '../../../assets/sprites/player/jump2_left.webp';
 
 // ATAQUES
-import spriteAttack1Left from '../../../assets/sprites/player/attack1_right.png';
-import spriteAttack1Right from '../../../assets/sprites/player/attack1_left.png';
+import spriteAttack1Left from '../../../assets/sprites/player/attack1_right.webp';
+import spriteAttack1Right from '../../../assets/sprites/player/attack1_left.webp';
 
-import spriteAttack2Left from '../../../assets/sprites/player/attack2_right.png';
-import spriteAttack2Right from '../../../assets/sprites/player/attack2_left.png';
+import spriteAttack2Left from '../../../assets/sprites/player/attack2_right.webp';
+import spriteAttack2Right from '../../../assets/sprites/player/attack2_left.webp';
 
-import spriteAttack3Left from '../../../assets/sprites/player/attack3_right.png';
-import spriteAttack3Right from '../../../assets/sprites/player/attack3_left.png';
+import spriteAttack3Left from '../../../assets/sprites/player/attack3_right.webp';
+import spriteAttack3Right from '../../../assets/sprites/player/attack3_left.webp';
 
 import deadLeft from '../../../assets/sprites/player/player_death_left.png';
 import deadRight from '../../../assets/sprites/player/player_death_right.png';

@@ -1,4 +1,4 @@
-import backgroundImage from '../../assets/menu.png';
+import backgroundImage from '../../assets/menu.webp';
 
 export class Menu {
     constructor({ canvas, c, onSelect }) {

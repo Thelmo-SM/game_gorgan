@@ -1,4 +1,4 @@
-import laserSprite from '../../../assets/sprites/enemies/bm/lazer.png';
+import laserSprite from '../../../assets/sprites/enemies/bm/lazer.webp';
 
 // 🔥 CARGA GLOBAL (UNA SOLA VEZ)
 const laserImage = new Image();

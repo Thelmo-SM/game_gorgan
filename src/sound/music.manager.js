@@ -3,31 +3,43 @@ export class MusicManager {
         this.audio = null;
     }
 
-play(src, volume = 1) {
+    play(src, volume = 1) {
 
-    // 🔥 crear audio si no existe
-    if (!this.audio) {
-        this.audio = new Audio();
+        // 🔥 detener audio anterior
+        if (this.audio) {
+            this.audio.pause();
+            this.audio.currentTime = 0;
+        }
+
+        this.audio = new Audio(src);
+
+        this.audio.loop = true;
+        this.audio.volume = volume ?? 1;
+
+        this.audio.play().catch(() => {});
     }
 
-    this.audio.src = src;
-    this.audio.loop = true;
-
-    // 🔥 evita error de null
-    this.audio.volume = volume ?? 1;
-
-    this.audio.play().catch(() => {});
-}
-setVolume(value) {
-    if (this.audio) {
-        this.audio.volume = value;
+    setVolume(value) {
+        if (this.audio) {
+            this.audio.volume = value;
+        }
     }
-}
 
     stop() {
         if (!this.audio) return;
 
         this.audio.pause();
+
+        // 🔥 reinicia completamente
+        this.audio.currentTime = 0;
+
+        // 🔥 fuerza descarga del audio
+        this.audio.src = '';
+
+        this.audio.load();
+
         this.audio = null;
     }
+
+    
 }

@@ -1,6 +1,6 @@
 import { Laser } from "../weapons/laser";
 import laserEnemySprite from '../../../assets/sprites/enemies/bm/villano_2.png';
-import laserEnemyDeadSprite from '../../../assets/sprites/enemies/bm/villano_2_dead.png';
+import laserEnemyDeadSprite from '../../../assets/sprites/enemies/bm/villano_2_dead.webp';
 
 export class LaserEnemy {
     constructor({ x, y, lasers, soundManager }) {

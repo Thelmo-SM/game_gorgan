@@ -21,40 +21,40 @@ import { PendulumTrap } from '../entities/traps/trap-2.js';
 import { renderFog } from '../render/fog.renderer.js';
 import { Menu } from './Menu.js';
 
-import ground1 from '../../assets/tiles/ground_1.png';
-import ground2 from '../../assets/tiles/ground_2.png';
-import ground3 from '../../assets/tiles/ground_3.png';
+import ground1 from '../../assets/tiles/ground_1.webp';
+import ground2 from '../../assets/tiles/ground_2.webp';
+import ground3 from '../../assets/tiles/ground_3.webp';
 
-import mountainsImg from '../../assets/background/mountains_1.png';
-import mountainsFar from '../../assets/background/mountains_2.png';
-import mountainsSmall from '../../assets/background/mountains_small_1.png';
+import mountainsImg from '../../assets/background/mountains_1.webp';
+import mountainsFar from '../../assets/background/mountains_2.webp';
+import mountainsSmall from '../../assets/background/mountains_small_1.webp';
 
-import treeImg from '../../assets/environment/trees/tree_01.png';
-import tree_02 from '../../assets/environment/trees/tree_02.png';
-import newTreeImg from '../../assets/environment/trees/tree_03.png';
+import treeImg from '../../assets/environment/trees/tree_01.webp';
+import tree_02 from '../../assets/environment/trees/tree_02.webp';
+import newTreeImg from '../../assets/environment/trees/tree_03.webp';
 
-import grassIMG from '../../assets/environment/grass.png';
-import rock_1 from '../../assets/environment/rocks/rock_2.png';
-import rock_S from '../../assets/environment/rocks/rock_1.png';
+import grassIMG from '../../assets/environment/grass.webp';
+import rock_1 from '../../assets/environment/rocks/rock_2.webp';
+import rock_S from '../../assets/environment/rocks/rock_1.webp';
 
-import playerFace from '../../assets/sprites/player/player_face.png';
+import playerFace from '../../assets/sprites/player/player_face.webp';
 
-import plantImg from '../../assets/background/plant_nearby.png';
+import plantImg from '../../assets/background/plant_nearby.webp';
 
-import tunnelImg from '../../assets/environment/tunnel-1.png';
+import tunnelImg from '../../assets/environment/tunnel-1.webp';
 
-import floatingRock from '../../assets/environment/rocks/floating-rock.png';
+import floatingRock from '../../assets/environment/rocks/floating-rock.webp';
 
-import lakeImg from '../../assets/environment/lago.png';
+import lakeImg from '../../assets/environment/lago.webp';
 
-import trampaImg from '../../assets/traps/trampa_1.png';
-import pendulumImage from '../../assets/traps/trampa_2.png';
+import trampaImg from '../../assets/traps/trampa_1.webp';
+import pendulumImage from '../../assets/traps/trampa_2.webp';
 
-import fogImage from '../../assets/environment/nieblas.png';
+import fogImage from '../../assets/environment/nieblas.webp';
 
-//SONIDOS  
-import bgMusic from '../../assets/sounds/backgroundSound.wav';
-import menuMusic from '../../assets/sounds/menuSound.wav';
+//SONIDOS
+import bgMusic from '../../assets/sounds/backgroundSound.mp3';
+import menuMusic from '../../assets/sounds/menuSound.mp3';
 
 
 export class Game {
@@ -68,7 +68,7 @@ export class Game {
         this.playerFaceImg.src = playerFace;
 
         this.platforms = [];
-        this.worldX = -36000;
+        this.worldX = -2000;
         //this.worldX = -2000;
         //this.worldX = -7000;
         this.scrollSpeed = 5;
@@ -181,6 +181,31 @@ this.menu = new Menu({
     }
 });
 
+const startMenuMusic = () => {
+
+    this.soundManager.unlock();
+
+    this.music.play(menuMusic, 0.3);
+
+    window.removeEventListener('keydown', startMenuMusic);
+    window.removeEventListener('click', startMenuMusic);
+};
+
+window.addEventListener('keydown', startMenuMusic);
+window.addEventListener('click', startMenuMusic);
+
+// window.addEventListener('click', () => {
+
+//     if (this.menuMusicStarted) return;
+
+//     this.soundManager.unlock();
+
+//     this.music.play(menuMusic, 0.3);
+
+//     this.menuMusicStarted = true;
+
+// });
+
         handleInput(this.player);
 
        this.TILE = 400;
@@ -269,7 +294,7 @@ this.enemies.push(
 );
 // if (!this.enemySpawned && this.player.position.x > 500) {
 //     this.enemies.push(
-//         new Enemy({ x: this.worldX * -1 + 1000, y: this.groundY, type: 'TANK' })
+//         new Enemy({ x: this.worldX * -1 + 1000, y: this.groundY, type: 'TANK' }) audioUnlocked
 //     );
 
 //     this.enemySpawned = true;
@@ -483,15 +508,6 @@ this.pendulums.push(new PendulumTrap({
     length: 300
 }));
 
-//ACTIVAIÒN DE SONIDOS foregroundItems this.foregroundItems.forEach(...)
-window.addEventListener('click', () => {
-    this.audioUnlocked = true;
-
-    this.soundManager.unlock();
-
-    //this.music.play(bgMusic, 0.90);
-}, { once: true });
-
 
 
     }
@@ -514,10 +530,10 @@ window.addEventListener('click', () => {
 if (this.gameState === 'MENU') {
 
     // 🔥 MÚSICA DEL MENÚ
-    if (!this.menuMusicStarted) {
-        this.music.play(menuMusic, 0.3);
-        this.menuMusicStarted = true;
-    }
+    // if (!this.menuMusicStarted) {
+    //     this.music.play(menuMusic, 0.3);
+    //     this.menuMusicStarted = true;
+    // }
 
     this.menu.update(keys);
     this.menu.draw();
@@ -537,7 +553,7 @@ if (this.gameState === 'END') {
 
 
 
-        //MOVIMIENTO DEL AGUA DEL LAGO
+        //MOVIMIENTO DEL AGUA DEL LAGO gameState 
         this.waveOffset += 0.02;
 
     const player = this.player;
@@ -563,10 +579,6 @@ if (this.gameState === 'END') {
             this.worldX += this.scrollSpeed;
         }
     }
-// 🔥 FIN DEL JUEGO (IMPORTANTE: debajo del movimiento)
-if (this.player.position.x - this.worldX >= 39000) {
-    this.gameState = 'END';
-}
 
     // 🌌 FONDO
 // 🌌 FONDO (MUY LEJANO)
@@ -577,7 +589,7 @@ this.mountains.draw(this.c, this.worldX * 0.4);
 
 this.farMountains.draw(this.c, this.worldX);
 
-// ⛰️ MONTAÑAS MEDIAS
+// ⛰️ MONTAÑAS MEDIAS { once: true }
 
 
 
@@ -840,9 +852,22 @@ this.enemies.forEach(enemy => {
 
     const screenX = enemy.position.x + this.worldX;
 
-    // 🔥 SOLO PROCESA SI ESTÁ EN PANTALLA
-    if (screenX > -500 && screenX < this.canvas.width + 500) {
+    const isVisible =
+        screenX > -500 &&
+        screenX < this.canvas.width + 500;
+
+    if (isVisible) {
+
         enemy.update(this.c, this.worldX, player);
+
+    } else {
+
+        // 🔥 DETENER SUSURRO SI SALE DE PANTALLA
+        if (enemy.whisperSound) {
+
+            enemy.whisperSound.pause();
+            enemy.whisperSound.currentTime = 0;
+        }
     }
 });
 
@@ -989,11 +1014,23 @@ drawEndScreen() {
 handleEndInput(keys) {
     if (keys.enter?.pressed) {
 
+        // 🔥 DETENER TODO EL AUDIO DEL GAMEPLAY
+        this.music.stop();
+
+        // 🔥 detener sonidos activos
+        this.soundManager.stopAll();
+
+        // 🔥 reset del juego
         this.resetGame();
+
+        // 🔥 volver al menú
         this.gameState = 'MENU';
 
-        keys.enter.pressed = false;
+        // 🔥 permitir que el menú vuelva a iniciar música
+       // this.menuMusicStarted = false;
         this.music.play(menuMusic, 0.3);
+
+        keys.enter.pressed = false;
     }
 }
 

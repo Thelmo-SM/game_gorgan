@@ -7,16 +7,32 @@ export class SoundManager {
 
         this.lastStep = -1;
         this.unlocked = false;
+
+        this.activeSounds = [];
     }
 
     unlock() {
         this.unlocked = true;
     }
 
-    safePlay(sound) {
-        if (!this.unlocked) return;
-        sound.play().catch(() => {});
-    }
+safePlay(sound) {
+
+    if (!this.unlocked) return;
+
+    // 🔥 guardar referencia
+    this.activeSounds.push(sound);
+
+    sound.play().catch(() => {});
+
+    // 🔥 limpiar cuando termine
+    sound.onended = () => {
+
+        this.activeSounds = this.activeSounds.filter(
+            s => s !== sound
+        );
+
+    };
+}
 
     // ================= PLAYER =================
 
@@ -101,13 +117,21 @@ export class SoundManager {
     }
 
 playSpiderWhisperLoop() {
+
+    // 🔥 evitar duplicados
+    if (this.spiderWhisperLoop) {
+        return this.spiderWhisperLoop;
+    }
+
     const sound = this.sounds.spiderWhisper.cloneNode();
 
     sound.loop = true;
-    this.whisperSound.volume = this.soundManager.masterVolume * 0.1;
+    sound.volume = this.masterVolume * 0.1;
     sound.currentTime = 0;
 
-    this.safePlay(sound);
+    sound.play().catch(() => {});
+
+    this.spiderWhisperLoop = sound;
 
     return sound;
 }
@@ -166,5 +190,59 @@ updatePendulumSound(pendulum, player, worldX) {
 
     // pitch
     sound.playbackRate = 0.8 + speed * 0.5;
+}
+
+stopAll() {
+
+    this.activeSounds.forEach(sound => {
+
+        sound.pause();
+        sound.currentTime = 0;
+
+    });
+
+    this.activeSounds = [];
+
+    // 🔥 péndulo
+    if (this.pendulumLoop) {
+
+        this.pendulumLoop.pause();
+        this.pendulumLoop.currentTime = 0;
+        this.pendulumLoop = null;
+    }
+
+    // 🔥 araña
+    if (this.spiderWhisperLoop) {
+
+        this.spiderWhisperLoop.pause();
+        this.spiderWhisperLoop.currentTime = 0;
+        this.spiderWhisperLoop = null;
+    }
+}
+
+updateSpiderWhisperVolume(enemy, player, worldX) {
+
+    const sound = this.playSpiderWhisperLoop();
+
+    if (!sound) return;
+
+    // 🔥 posición en pantalla
+    const enemyX = enemy.position.x + worldX;
+    const playerX = player.position.x;
+
+    // 🔥 distancia
+    const distance = Math.abs(enemyX - playerX);
+
+    // 🔥 rango máximo audible
+    const maxDistance = 2500;
+
+    // 🔥 volumen dinámico
+    let volume = 1 - (distance / maxDistance);
+
+    // 🔥 clamp
+    volume = Math.max(0, Math.min(1, volume));
+
+    // 🔥 volumen final
+    sound.volume = volume * 0.15 * this.masterVolume;
 }
 }

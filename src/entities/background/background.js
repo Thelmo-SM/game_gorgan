@@ -1,4 +1,4 @@
-import sky from '../../../assets/background/sky.jpg';
+import sky from '../../../assets/background/sky.webp';
 
 export class Background {
     constructor() {
