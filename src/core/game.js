@@ -20,6 +20,7 @@ import { SpikeTrap } from '../entities/traps/trap-1.js';
 import { PendulumTrap } from '../entities/traps/trap-2.js';
 import { renderFog } from '../render/fog.renderer.js';
 import { Menu } from './Menu.js';
+import { HealingItem } from '../entities/items/health.pickup.js';
 
 import ground1 from '../../assets/tiles/ground_1.webp';
 import ground2 from '../../assets/tiles/ground_2.webp';
@@ -55,6 +56,9 @@ import fogImage from '../../assets/environment/nieblas.webp';
 //SONIDOS
 import bgMusic from '../../assets/sounds/backgroundSound.mp3';
 import menuMusic from '../../assets/sounds/menuSound.mp3';
+
+//VIDA
+import healImg from '../../assets/sprites/player/health.webp';
 
 
 export class Game {
@@ -130,6 +134,10 @@ export class Game {
         this.player.onDeath = () => {
         this.soundManager.playDeath();
         };
+        // 💀 GAME OVER FADE
+        this.deathOpacity = 0;
+        this.isRestarting = false;
+        this.deathStartTime = 0;
 
         //LAGO
         this.waveOffset = 0;
@@ -145,6 +153,45 @@ export class Game {
 
         //MENU
         this.gameState = 'MENU';
+
+        //VIDA
+// ❤️ OBJETOS CURATIVOS
+this.healingItems = [];
+
+this.healImage = new Image();
+this.healImage.src = healImg;
+
+this.healingItems.push(
+
+new HealingItem({
+    x: 12200,
+    y: 500,
+    image: this.healImage
+}),
+
+    new HealingItem({
+        x: 17000,
+        y: 500,
+        image: this.healImage
+    }),
+        new HealingItem({
+        x: 19000,
+        y: 500,
+        image: this.healImage
+    }),
+            new HealingItem({
+        x: 20000,
+        y: 500,
+        image: this.healImage
+    }),
+
+    new HealingItem({
+        x: 22000,
+        y: 500,
+        image: this.healImage
+    })
+
+);
         
     }
 
@@ -532,7 +579,7 @@ if (this.gameState === 'MENU') {
     // 🔥 MÚSICA DEL MENÚ
     // if (!this.menuMusicStarted) {
     //     this.music.play(menuMusic, 0.3);
-    //     this.menuMusicStarted = true;
+    //     this.menuMusicStarted = true; movimiento
     // }
 
     this.menu.update(keys);
@@ -561,7 +608,9 @@ if (this.gameState === 'END') {
     const LEFT_LIMIT = this.canvas.width * 0.20;
     const RIGHT_LIMIT = this.canvas.width * 0.40;
 
-    // 🎮 MOVIMIENTO
+// 🎮 MOVIMIENTO
+if (!player.isDead) {
+
     if (keys.right.pressed) {
         player.direction = 'right';
 
@@ -570,7 +619,9 @@ if (this.gameState === 'END') {
         } else {
             this.worldX -= this.scrollSpeed;
         }
-    } else if (keys.left.pressed) {
+    } 
+    else if (keys.left.pressed) {
+
         player.direction = 'left';
 
         if (player.position.x > LEFT_LIMIT) {
@@ -579,6 +630,8 @@ if (this.gameState === 'END') {
             this.worldX += this.scrollSpeed;
         }
     }
+
+}
 
     // 🌌 FONDO
 // 🌌 FONDO (MUY LEJANO)
@@ -711,6 +764,46 @@ this.foregroundItems.forEach(item => {
 
     // 🧍 PLAYER
     player.update(this.c, this.canvas.height, keys);
+
+    // 💀 REINICIO POR MUERTE
+if (player.isDead && !this.isRestarting) {
+
+    this.isRestarting = true;
+
+setTimeout(() => {
+
+    this.respawnPlayer();
+
+    this.deathOpacity = 0;
+    this.isRestarting = false;
+
+}, 6000);
+}
+
+    // ❤️ OBJETOS CURATIVOS
+this.healingItems.forEach(item => {
+
+    const itemX = item.position.x + this.worldX;
+    const itemY = item.position.y;
+
+    const hit =
+        player.position.x < itemX + item.width &&
+        player.position.x + player.width > itemX &&
+        player.position.y < itemY + item.height &&
+        player.position.y + player.height > itemY;
+
+    if (hit && !item.collected && player.hp < 100) {
+
+        player.hp = Math.min(player.hp + 20, 100);
+
+        item.collected = true;
+
+        this.soundManager.playHeal();
+    }
+
+    item.draw(this.c, this.worldX);
+
+});
     // DEBUG PLAYER HITBOX
 // this.c.strokeStyle = 'blue';
 // this.c.strokeRect(player.position.x, player.position.y, player.width, player.height);
@@ -795,7 +888,7 @@ this.pendulums.forEach(pendulum => {
 
             // 🔴 DEBUG (AHORA SÍ SE VA A VER)
            // this.c.fillStyle = 'red';
-           // this.c.fillRect(tipX - 4, tipY - 4, 8, 8);
+           // this.c.fillRect(tipX - 4, tipY - 4, 8, 8); (hit && !item.collected && player.hp < 100)
         });
     }
 });
@@ -913,7 +1006,9 @@ const hit =
 
             player.hasHit = true;
         }
-       // this.c.strokeStyle = 'blue';
+//VIDA
+
+       // this.c.strokeStyle = 'blue'; 
 // this.c.strokeRect(
 //     player.position.x,
 //     player.position.y,
@@ -942,7 +1037,7 @@ const hit =
 
 
     // 🌿 FOREGROUND
-// this.foregroundItems.forEach(item => {
+// this.foregroundItems.forEach(item => { if (hit && !player.hasHit && isHitFrame)
 //     item.draw(this.c, this.worldX * 1.2);
 // });
 
@@ -988,6 +1083,31 @@ const hit =
 
     this.c.strokeStyle = 'gray';
     this.c.strokeRect(x, y, barWidth, barHeight);
+    
+// 💀 FADE DE MUERTE
+if (player.isDead) {
+
+    const elapsed = Date.now() - player.deathStartTime;
+
+    // 🔥 esperar antes de oscurecer
+    if (elapsed > 4200) {
+
+        this.deathOpacity += 0.008;
+
+        if (this.deathOpacity > 1) {
+            this.deathOpacity = 1;
+        }
+
+        this.c.fillStyle = `rgba(0,0,0,${this.deathOpacity})`;
+
+        this.c.fillRect(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
+    }
+}
 }
 
 drawEndScreen() {
@@ -1044,5 +1164,26 @@ resetGame() {
     this.player.isDead = false;
 }
 
+respawnPlayer() {
+
+    this.worldX = -7000;
+
+    this.player.position.x = 100;
+    this.player.position.y = 0;
+
+    this.player.velocity.x = 0;
+    this.player.velocity.y = 0;
+
+    this.player.hp = 100;
+
+    this.player.isDead = false;
+    this.player.frames = 0;
+    this.player.frameTimer = 0;
+
+    this.player.state = PLAYER_STATES.IDLE;
 }
+
+}
+
+
 

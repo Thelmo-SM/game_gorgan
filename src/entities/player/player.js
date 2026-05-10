@@ -67,6 +67,7 @@ export class Player {
         this.isInvulnerable = false;
         this.invulnerabilityTime = 800; // ms
         this.isDead = false;
+        this.deathStartTime = 0;
 
         //ATTACK
     this.attackBox = {
@@ -463,18 +464,21 @@ takeHit(damage) {
 }
 // 💀 MUERTE
 die() {
-    // Si ya entramos aquí una vez, no hagas nada más
+
     if (this.isDead) return;
 
     this.isDead = true;
+
+    this.deathStartTime = Date.now();
+
     this.frames = 0;
     this.frameTimer = 0;
 
     this.velocity.x = 0;
+
     this.state = PLAYER_STATES.DEATH;
 
     this.onDeath?.();
-    console.log('💀 PLAYER MUERTO POR PRIMERA VEZ');
 }
 
 //ATTACKBOX

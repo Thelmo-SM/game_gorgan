@@ -245,4 +245,16 @@ updateSpiderWhisperVolume(enemy, player, worldX) {
     // 🔥 volumen final
     sound.volume = volume * 0.15 * this.masterVolume;
 }
+
+//VIDA
+playHeal() {
+
+    const sound = this.sounds.heal.cloneNode();
+
+    sound.volume = this.masterVolume * 0.5;
+
+    sound.playbackRate = 1;
+
+    this.safePlay(sound);
+}
 }

@@ -43,14 +43,14 @@ export class SpikeTrap {
         );
 
         // --- MODO DEBUG: VISUALIZAR COLISIÓN ---
-        c.strokeStyle = this.isDangerous ? 'red' : 'green';
-        c.lineWidth = 2;
-        c.strokeRect(
-            drawX + this.hitbox.offsetX,
-            this.position.y + (this.height - this.hitbox.height),
-            this.hitbox.width,
-            this.hitbox.height
-        );
+       // c.strokeStyle = this.isDangerous ? 'red' : 'green';
+        //c.lineWidth = 2;
+        // c.strokeRect(
+        //     drawX + this.hitbox.offsetX,
+        //     this.position.y + (this.height - this.hitbox.height),
+        //     this.hitbox.width,
+        //     this.hitbox.height
+        // );
     }
 
 update(c, worldX, onActivate) { // Añadimos onActivate aquí

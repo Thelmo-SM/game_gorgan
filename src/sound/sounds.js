@@ -23,6 +23,9 @@ import pendulumLoop from '../../assets/sounds/trapsSound/trampa_2.mp3';
 //MENU
 import menuMusic from '../../assets/sounds/menuSound.mp3';
 
+//VIDA
+import healSound from '../../assets/sounds/playerSounds/healingISound.mp3';
+
 export const createSounds = () => {
 
     const steps = [
@@ -48,6 +51,8 @@ export const createSounds = () => {
 
     const menu = new Audio(menuMusic);
 
+    const heal = new Audio(healSound);
+
     return {
         // PLAYER
         steps,
@@ -70,6 +75,9 @@ export const createSounds = () => {
         pendulumSound,
         
         // 🎧 MENU
-        menu
+        menu,
+
+        //VIDA
+        heal
     };
 };
