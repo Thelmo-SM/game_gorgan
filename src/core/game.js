@@ -19,7 +19,7 @@ import { SoundManager } from '../sound/sound.manager.js';
 import { SpikeTrap } from '../entities/traps/trap-1.js';
 import { PendulumTrap } from '../entities/traps/trap-2.js';
 import { renderFog } from '../render/fog.renderer.js';
-import { Menu } from './Menu.js';
+import { Menu } from './menu.js';
 import { HealingItem } from '../entities/items/health.pickup.js';
 
 import ground1 from '../../assets/tiles/ground_1.webp';
