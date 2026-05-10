@@ -77,6 +77,8 @@ export class Game {
         //this.worldX = -7000;
         this.scrollSpeed = 5;
 
+        this.initialized = false;
+
         // 🌄 Montaña grande (solo una vez)
         this.mountains = new Mountains({ image: mountainsImg });
         this.mountains.parallax = 0.2;
@@ -200,7 +202,7 @@ new HealingItem({
         
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-    //MENU DEL JUEGO
+    //MENU DEL JUEGO window.addEventListener(...)
 this.menu = new Menu({
     canvas: this.canvas,
     c: this.c,
@@ -212,7 +214,7 @@ this.menu = new Menu({
         // 🔥 desbloquear sonidos
         this.soundManager.unlock();
 
-        // 🔥 AQUÍ VA EL BACKGROUND SOUND
+        // 🔥 AQUÍ VA EL BACKGROUND SOUND startMenuMusi
         this.music.play(bgMusic, 0.4);
 
             this.gameState = 'PLAYING';
@@ -228,30 +230,35 @@ this.menu = new Menu({
     }
 });
 
-const startMenuMusic = () => {
-
-    this.soundManager.unlock();
-
-    this.music.play(menuMusic, 0.3);
-
-    window.removeEventListener('keydown', startMenuMusic);
-    window.removeEventListener('click', startMenuMusic);
-};
-
-window.addEventListener('keydown', startMenuMusic);
-window.addEventListener('click', startMenuMusic);
-
-// window.addEventListener('click', () => {
-
-//     if (this.menuMusicStarted) return;
+// const startMenuMusic = () => {
 
 //     this.soundManager.unlock();
 
 //     this.music.play(menuMusic, 0.3);
 
-//     this.menuMusicStarted = true;
+//     window.removeEventListener('keydown', startMenuMusic);
+//     window.removeEventListener('click', startMenuMusic);
+// };
 
-// });
+    if (!this.initialized) {
+
+        const startMenuMusic = () => {
+
+            this.soundManager.unlock();
+
+            this.music.play(menuMusic, 0.3);
+
+            window.removeEventListener('keydown', startMenuMusic);
+            window.removeEventListener('click', startMenuMusic);
+        };
+
+        window.addEventListener('keydown', startMenuMusic);
+        window.addEventListener('click', startMenuMusic);
+
+        handleInput(this.player);
+
+        this.initialized = true;
+    }
 
         handleInput(this.player);
 
@@ -428,16 +435,14 @@ this.foregroundItems.push(
     })
 );  
 
-this.foregroundItems.push(
-    new ForegroundItem({
-        x: this.tunnelX,
-        y: this.groundY - 280, // 👈 pegado al suelo REAL
-        image: tunnelImg,
-        width: 800,
-        height: 400,
-        parallax: 1.3
-    })
-);
+this.tunnel = new ForegroundItem({
+    x: this.tunnelX,
+    y: this.groundY - 280,
+    image: tunnelImg,
+    width: 800,
+    height: 400,
+    parallax: 1.3
+});
 
 //plataforma flotante
 this.floatingPlatforms = [];
@@ -666,7 +671,7 @@ if (this.lakeTree) {
 
 
 
-    // 🟫 SUELO
+    // 🟫 SUELO foregroundItems
     const TILE = 400;
 
     this.platforms.forEach(platform => {
@@ -963,6 +968,10 @@ this.enemies.forEach(enemy => {
         }
     }
 });
+//TUNEL
+if (this.tunnel) {
+    this.tunnel.draw(this.c, this.worldX);
+}
 
 // =========================
 // ⚔️ ATAQUE DEL PLAYER
@@ -1134,20 +1143,15 @@ drawEndScreen() {
 handleEndInput(keys) {
     if (keys.enter?.pressed) {
 
-        // 🔥 DETENER TODO EL AUDIO DEL GAMEPLAY
         this.music.stop();
-
-        // 🔥 detener sonidos activos
         this.soundManager.stopAll();
 
-        // 🔥 reset del juego
+        // 🔥 RESET REAL
         this.resetGame();
 
-        // 🔥 volver al menú
+        // 🔥 VOLVER AL MENU
         this.gameState = 'MENU';
 
-        // 🔥 permitir que el menú vuelva a iniciar música
-       // this.menuMusicStarted = false;
         this.music.play(menuMusic, 0.3);
 
         keys.enter.pressed = false;
@@ -1155,18 +1159,10 @@ handleEndInput(keys) {
 }
 
 resetGame() {
+
+    this.init();
+
     this.worldX = -2000;
-
-    this.player.position.x = 100;
-    this.player.position.y = 0;
-
-    this.player.hp = 100;
-    this.player.isDead = false;
-}
-
-respawnPlayer() {
-
-    this.worldX = -7000;
 
     this.player.position.x = 100;
     this.player.position.y = 0;
@@ -1177,6 +1173,27 @@ respawnPlayer() {
     this.player.hp = 100;
 
     this.player.isDead = false;
+
+    this.player.state = PLAYER_STATES.IDLE;
+}
+
+respawnPlayer() {
+
+    // 🔥 RECREAR TODO EL MUNDO
+    this.init();
+
+    this.worldX = -2000;
+
+    this.player.position.x = 100;
+    this.player.position.y = 0;
+
+    this.player.velocity.x = 0;
+    this.player.velocity.y = 0;
+
+    this.player.hp = 100;
+
+    this.player.isDead = false;
+
     this.player.frames = 0;
     this.player.frameTimer = 0;
 
