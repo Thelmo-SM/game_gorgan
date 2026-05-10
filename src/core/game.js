@@ -33,7 +33,7 @@ import mountainsSmall from '../../assets/background/mountains_small_1.webp';
 import treeImg from '../../assets/environment/trees/tree_01.webp';
 import tree_02 from '../../assets/environment/trees/tree_02.webp';
 import newTreeImg from '../../assets/environment/trees/tree_03.webp';
-
+//
 import grassIMG from '../../assets/environment/grass.webp';
 import rock_1 from '../../assets/environment/rocks/rock_2.webp';
 import rock_S from '../../assets/environment/rocks/rock_1.webp';
