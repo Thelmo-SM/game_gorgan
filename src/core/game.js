@@ -77,7 +77,7 @@ export class Game {
 
         this.platforms = [];
         this.worldX = -2000;
-        //this.worldX = -2000;
+        //this.worldX = -2000; this.baseWidth
         //this.worldX = -7000;
         this.scrollSpeed = 5;
 
@@ -205,8 +205,18 @@ new HealingItem({
 
 
 //TAMAÑO DE PANTALLAS
-this.baseWidth = 1920;
-this.baseHeight = 1080;
+//TAMAÑO DE PANTALLAS
+
+if (this.isMobile) {
+
+    this.baseWidth = 960;
+    this.baseHeight = 540;
+
+} else {
+
+    this.baseWidth = 1920;
+    this.baseHeight = 1080;
+}
 
 this.canvas.width = this.baseWidth;
 this.canvas.height = this.baseHeight;
@@ -756,8 +766,9 @@ this.lakeTree.draw(this.c, this.worldX);
 // Sumamos 19800 para compensar el inicio en -33000 con parallax 0.6
 const lakeX = (this.lake.position.x - 13200) + parallaxOffset;
 const lakeY = this.lake.position.y;
+const waveCount = this.isMobile ? 2 : 5;
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < waveCount; i++) {
     const wave = Math.sin(this.waveOffset + i * 0.5) * 5;
     this.c.drawImage(
         this.lake.image,
@@ -828,7 +839,9 @@ this.healingItems.forEach(item => {
 // this.c.strokeRect(player.position.x, player.position.y, player.width, player.height);
 
 //NIEBLAS
-renderFog(this.c, this);
+if (!this.isMobile) {
+    renderFog(this.c, this);
+}
 
     //trampas para el juego
 this.traps.forEach(trap => {
@@ -949,7 +962,7 @@ this.lasers.forEach((laser, index) => {
 if (hit) {
     player.takeHit(20);
 
-    // 🔥 CLAMP (OBLIGATORIO)
+    // 🔥 CLAMP (OBLIGATORIO) niebla
     if (this.player.hp < 0) {
         this.player.hp = 0;
     }
@@ -1029,32 +1042,7 @@ const hit =
 
             player.hasHit = true;
         }
-//VIDA
 
-       // this.c.strokeStyle = 'blue'; 
-// this.c.strokeRect(
-//     player.position.x,
-//     player.position.y,
-//     player.width,
-//     player.height
-// );
-
-//         // 🧪 DEBUG
-//         this.c.strokeStyle = 'yellow';
-//         this.c.strokeRect(
-//             attackX,
-//             attackY,
-//             player.attackBox.width,
-//             player.attackBox.height
-//         );
-
-// this.c.strokeStyle = 'red';
-// this.c.strokeRect(
-//     enemyX,
-//     enemyY,
-//     enemyWidth,
-//     enemyHeight
-// );
     });
 }
 
