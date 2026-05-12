@@ -66,6 +66,10 @@ export class Game {
         this.canvas = document.querySelector('canvas');
         this.c = this.canvas.getContext('2d');
 
+        // 📱 DETECTAR MOBILE
+        this.isMobile =
+        /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
         this.background = new Background();
         this.player = new Player();
         this.playerFaceImg = new Image();
@@ -265,7 +269,7 @@ this.menu = new Menu({
         this.initialized = true;
     }
 
-        handleInput(this.player);
+        //handleInput(this.player);
 
        this.TILE = 400;
        this.groundY = this.canvas.height - this.TILE;
@@ -564,6 +568,11 @@ this.pendulums.push(new PendulumTrap({
     image: pendulumAsset, 
     length: 300
 }));
+
+//MOBILE
+if (this.isMobile) {
+    this.createMobileControls();
+}
 
 
 
@@ -1234,6 +1243,96 @@ respawnPlayer() {
     this.player.frameTimer = 0;
 
     this.player.state = PLAYER_STATES.IDLE;
+}
+
+//Control para mobile handleInput(this.player);
+createMobileControls() {
+
+    // 🔥 evitar duplicados
+    if (document.getElementById('mobile-controls')) return;
+
+    const controls = document.createElement('div');
+
+    controls.innerHTML = `
+<div id="mobile-controls">
+    <button id="left-btn">◀</button>
+    <button id="right-btn">▶</button>
+    <button id="jump-btn">⬆</button>
+    <button id="attack-btn">⚔</button>
+    <button id="enter-btn">⏎</button>
+</div>
+    `;
+
+    document.body.appendChild(controls);
+
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
+    const jumpBtn = document.getElementById('jump-btn');
+    const attackBtn = document.getElementById('attack-btn');
+
+    // 🔥 LEFT
+    leftBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keys.left.pressed = true;
+    });
+
+    leftBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys.left.pressed = false;
+    });
+
+    // 🔥 RIGHT
+    rightBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keys.right.pressed = true;
+    });
+
+    rightBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys.right.pressed = false;
+    });
+
+    // 🔥 JUMP
+    jumpBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+
+        if (!keys.jump.pressed) {
+            this.player.jump();
+            keys.jump.pressed = true;
+        }
+    });
+
+    jumpBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys.jump.pressed = false;
+    });
+
+    // 🔥 ATTACK
+    attackBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+
+        this.player.onAttackInput();
+        keys.attack1.pressed = true;
+    });
+
+    attackBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys.attack1.pressed = false;
+    });
+
+    const enterBtn = document.getElementById('enter-btn');
+
+    enterBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+
+    keys.enter.pressed = true;
+});
+
+enterBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+
+    keys.enter.pressed = false;
+});
 }
 
 }

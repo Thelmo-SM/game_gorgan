@@ -41,6 +41,30 @@ canvas {
 
     image-rendering: pixelated;
 }
+#mobile-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 999;
+}
+
+#mobile-controls button {
+    width: 70px;
+    height: 70px;
+    border: none;
+    border-radius: 50%;
+    font-size: 30px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
 </style>
 </head>
 <body>
