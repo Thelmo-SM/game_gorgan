@@ -70,6 +70,8 @@ export class Game {
         this.isMobile =
         /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+        this.scale = this.isMobile ? 0.55 : 1;
+
         this.background = new Background();
         this.player = new Player();
         this.playerFaceImg = new Image();
@@ -205,12 +207,17 @@ new HealingItem({
 
 
 //TAMAÑO DE PANTALLAS
-//TAMAÑO DE PANTALLAS
+//TAMAÑO DE PANTALLAS tree.width = 250;
 
 if (this.isMobile) {
 
-    this.canvas.width = 960;
-    this.canvas.height = 540;
+const dpr = this.isMobile ? 1 : window.devicePixelRatio;
+
+this.canvas.width = 960 * dpr;
+this.canvas.height = 540 * dpr;
+
+this.c.setTransform(1,0,0,1,0,0);
+this.c.scale(dpr, dpr);
 
 } else {
 
@@ -229,7 +236,7 @@ this.menu = new Menu({
 
         this.music.stop();
 
-        // 🔥 desbloquear sonidos
+        // 🔥 desbloquear sonidos 900
         this.soundManager.unlock();
 
         // 🔥 AQUÍ VA EL BACKGROUND SOUND startMenuMusi
@@ -280,8 +287,16 @@ this.menu = new Menu({
 
         //handleInput(this.player);
 
-       this.TILE = 400;
-       this.groundY = this.canvas.height - this.TILE;
+        if (this.isMobile) {
+
+        this.TILE = 220;
+
+        } else {
+
+        this.TILE = 400;
+        }
+
+        this.groundY = this.canvas.height - this.TILE;
         const grounds = [ground1, ground2, ground3];
 
         // 🟫 SUELO INFINITO   enemy.update(this.c, this.groundY, this.worldX);
@@ -386,8 +401,8 @@ this.enemies.push(
                 image: treeImg
             });
 
-            tree.width = 250;
-            tree.height = 450;
+            tree.width = 250 * this.scale;
+            tree.height = 450 * this.scale;
 
             this.smallTrees.push(tree);
         }
@@ -421,8 +436,8 @@ this.enemies.push(
                 image: rock_1
             });
 
-            rock.width = 900;
-            rock.height = 900;
+            rock.width = 900 * this.scale;
+            rock.height = 900 * this.scale;
 
             this.bigRocks.push(rock);
         }
@@ -448,8 +463,8 @@ this.foregroundItems.push(
         x: plantX, // un poco a la derecha
         y: -50,  // 🔥 FUERZA visible arriba 260
         image: plantImg,
-        width: 800,
-        height: 800
+        width: 800 * this.scale,
+        height: 800 * this.scale
     })
 );  
 
@@ -457,12 +472,12 @@ this.tunnel = new ForegroundItem({
     x: this.tunnelX,
     y: this.groundY - 280,
     image: tunnelImg,
-    width: 800,
-    height: 400,
+    width: 800 * this.scale,
+    height: 400 * this.scale,
     parallax: 1.3
 });
 
-//plataforma flotante
+//plataforma flotante 
 this.floatingPlatforms = [];
 
 this.floatingPlatforms.push(
@@ -497,8 +512,8 @@ this.lakeParallax = 0.6;
             x: this.lakeX,
             y: this.groundY - 90, // Ajustado para que se vea sobre el suelo
             image: lakeImg,
-            width: 1200,           // MUCHO MÁS ANCHO
-            height: 210,           // MÁS ALTO
+            width: 1200 * this.scale,
+            height: 210 * this.scale,           // MÁS ALTO
             parallax: this.lakeParallax
         });
 // 🏔️ MONTAÑA PEQUEÑA SOLO EN EL LAGO
@@ -506,8 +521,8 @@ this.lakeMountain = new ForegroundItem({
     x: this.lakeX - 170,
     y: this.groundY - 590,
     image: mountainsSmall,
-    width: 1350,
-    height: 1000,
+    width: 1350 * this.scale,
+    height: 1000 * this.scale,
     parallax: this.lakeParallax
 });
 
@@ -516,8 +531,8 @@ this.specialTree = new ForegroundItem({
     x: 33950,
     y: this.groundY - 600,
     image: newTreeImg,
-    width: 700,
-    height: 700,
+    width: 700 * this.scale,
+    height: 700 * this.scale,
     parallax: this.lakeParallax
 });
 // 🌳 ÁRBOL ÚNICO EN EL LAGO
@@ -525,13 +540,13 @@ this.lakeTree = new ForegroundItem({
     x: this.lakeX + 300, // ajusta izquierda/derecha
     y: this.groundY - 330, // altura sobre el suelo  y: this.canvas.height - 750
     image: treeImg,
-    width: 400,
-    height: 400,
+    width: 400 * this.scale,
+    height: 400 * this.scale,
     parallax: this.lakeParallax // 🔥 mismo que el lago
 });
 
 //ROCAS EN EL LAGO
-// 🪨 ROCAS CERCA DEL LAGO (MISMA CAPA VISUAL)
+// 🪨 ROCAS CERCA DEL LAGO (MISMA CAPA VISUAL) farMountains
 this.foregroundItems.push(
     new ForegroundItem({
         x: 34600, // izquierda del lago
@@ -668,9 +683,11 @@ this.background.draw(this.c, this.worldX * 0.1);
 // 🏔️ MONTAÑAS LEJANAS
 this.mountains.draw(this.c, this.worldX * 0.4);
 
-this.farMountains.draw(this.c, this.worldX);
+if (!this.isMobile) {
+    this.farMountains.draw(this.c, this.worldX);
+}
 
-// ⛰️ MONTAÑAS MEDIAS { once: true } 
+// ⛰️ MONTAÑAS MEDIAS { once: true } TILE 
 
 
 
@@ -702,7 +719,7 @@ if (this.lakeTree) {
 
 
     // 🟫 SUELO foregroundItems 640
-    const TILE = 400;
+    const TILE = this.TILE;
 
     this.platforms.forEach(platform => {
         const drawX = platform.position.x + this.worldX;
