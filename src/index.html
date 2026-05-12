@@ -30,13 +30,14 @@ body{
 
 /* 🔥 CANVAS MÁS PEQUEÑO */
 canvas{
-    width:85vw;
-    height:85vh;
 
-    max-width:1600px;
-    max-height:900px;
+    width:min(92vw, 1600px);
 
     aspect-ratio:16/9;
+
+    height:auto;
+
+    max-height:85vh;
 
     display:block;
 
@@ -46,11 +47,11 @@ canvas{
 
     border:2px solid #111;
 
-    box-shadow:
-        0 0 40px rgba(129, 13, 13, 0.288),
-        0 0 120px rgba(14, 0, 0, 0.6);
+    border-radius:8px;
 
-    border-radius:6px;
+    box-shadow:
+        0 0 40px rgba(0,0,0,0.8),
+        0 0 120px rgba(120,0,0,0.25);
 }
 
 /* MOBILE */
@@ -67,16 +68,13 @@ canvas{
 }
 
 #mobile-controls button {
-    width: 70px;
-    height: 70px;
-    border: none;
-    border-radius: 50%;
-    font-size: 30px;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
+    width: 58px;
+    height: 58px;
+    font-size: 24px;
+
+    background: rgba(0,0,0,0.55);
+
+    backdrop-filter: blur(4px);
 }
 
 </style>
