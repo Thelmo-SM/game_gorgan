@@ -209,16 +209,16 @@ new HealingItem({
 
 if (this.isMobile) {
 
-    this.baseWidth = 640;
-    this.baseHeight = 360;
+    this.canvas.width = 960;
+    this.canvas.height = 540;
 
 } else {
 
-    this.baseWidth = 1920;
-    this.baseHeight = 1080;
+    this.canvas.width = 1600;
+    this.canvas.height = 900;
 }
-this.canvas.width = window.innerWidth;
-this.canvas.height = window.innerHeight;
+// this.canvas.width = window.innerWidth;
+// this.canvas.height = window.innerHeight;
 
     //MENU DEL JUEGO
 this.menu = new Menu({
@@ -1151,7 +1151,8 @@ drawEndScreen() {
     c.textAlign = 'center';
     c.textBaseline = 'middle';
 
-    c.font = `${80 * scaleX}px GameFont`;
+    // 🔥 TITULO
+    c.font = `${Math.min(80 * scaleX, 55)}px GameFont`;
     c.fillStyle = 'white';
 
     c.fillText(
@@ -1160,7 +1161,8 @@ drawEndScreen() {
         this.canvas.height / 2 - (80 * scaleY)
     );
 
-    c.font = `${30 * scaleX}px GameFont`;
+    // 🔥 TEXTO
+    c.font = `${Math.min(30 * scaleX, 24)}px GameFont`;
 
     c.fillText(
         'Gracias por jugar',
@@ -1168,7 +1170,8 @@ drawEndScreen() {
         this.canvas.height / 2
     );
 
-    c.font = `${25 * scaleX}px GameFont`;
+    // 🔥 SUBTEXTO
+    c.font = `${Math.min(25 * scaleX, 20)}px GameFont`;
 
     c.fillStyle = 'gray';
 

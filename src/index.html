@@ -22,36 +22,25 @@ html,body{
 
 /* 🔥 CENTRAR EL CANVAS */
 body{
+    margin:0;
     display:flex;
     justify-content:center;
     align-items:center;
+    min-height:100vh;
     background:black;
+    overflow:hidden;
 }
 
 /* 🔥 CANVAS MÁS PEQUEÑO */
 canvas{
-
-    width:min(92vw, 1600px);
+    width:100vw;
+    max-width:1600px;
 
     aspect-ratio:16/9;
 
     height:auto;
 
-    max-height:85vh;
-
     display:block;
-
-    image-rendering:pixelated;
-
-    background:black;
-
-    border:2px solid #111;
-
-    border-radius:8px;
-
-    box-shadow:
-        0 0 40px rgba(0,0,0,0.8),
-        0 0 120px rgba(120,0,0,0.25);
 }
 
 /* MOBILE */
