@@ -209,17 +209,16 @@ new HealingItem({
 
 if (this.isMobile) {
 
-    this.baseWidth = 960;
-    this.baseHeight = 540;
+    this.baseWidth = 640;
+    this.baseHeight = 360;
 
 } else {
 
     this.baseWidth = 1920;
     this.baseHeight = 1080;
 }
-
-this.canvas.width = this.baseWidth;
-this.canvas.height = this.baseHeight;
+this.canvas.width = window.innerWidth;
+this.canvas.height = window.innerHeight;
 
     //MENU DEL JUEGO
 this.menu = new Menu({
@@ -256,7 +255,7 @@ this.menu = new Menu({
 //     this.music.play(menuMusic, 0.3);
 
 //     window.removeEventListener('keydown', startMenuMusic);
-//     window.removeEventListener('click', startMenuMusic);
+//     window.removeEventListener('click', startMenuMusic); this.smallTrees.forEach(tree => tree.draw(this.c, this.worldX * 0.85));
 // };
 
     if (!this.initialized) {
@@ -680,7 +679,14 @@ this.farMountains.draw(this.c, this.worldX);
 this.tree_02_List.forEach(tree => tree.draw(this.c, this.worldX * 0.7));
 
 // 🌲 ÁRBOLES PEQUEÑOS (más cerca)
-this.smallTrees.forEach(tree => tree.draw(this.c, this.worldX * 0.85));
+//this.smallTrees.forEach(tree => tree.draw(this.c, this.worldX * 0.85)); waveCount
+const visibleTrees = this.isMobile
+    ? this.smallTrees.slice(0, 25)
+    : this.smallTrees;
+
+visibleTrees.forEach(tree => {
+    tree.draw(this.c, this.worldX * 0.85);
+});
 
 // 🪨 ROCAS (casi en gameplay)
 this.bigRocks.forEach(rock => rock.draw(this.c, this.worldX * 0.95));
@@ -766,7 +772,7 @@ this.lakeTree.draw(this.c, this.worldX);
 // Sumamos 19800 para compensar el inicio en -33000 con parallax 0.6
 const lakeX = (this.lake.position.x - 13200) + parallaxOffset;
 const lakeY = this.lake.position.y;
-const waveCount = this.isMobile ? 2 : 5;
+const waveCount = this.isMobile ? 1 : 5;
 
 for (let i = 0; i < waveCount; i++) {
     const wave = Math.sin(this.waveOffset + i * 0.5) * 5;
