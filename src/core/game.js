@@ -199,10 +199,15 @@ new HealingItem({
 
     init() {
 
-        
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    //MENU DEL JUEGO window.addEventListener(...)
+
+//TAMAÑO DE PANTALLAS
+this.baseWidth = 1920;
+this.baseHeight = 1080;
+
+this.canvas.width = this.baseWidth;
+this.canvas.height = this.baseHeight;
+
+    //MENU DEL JUEGO
 this.menu = new Menu({
     canvas: this.canvas,
     c: this.c,
@@ -364,7 +369,7 @@ this.enemies.push(
         for (let i = 0; i < 80; i++) {
             const tree = new Tree({
                 x: startX + i * TREE_SPACING,
-                y: this.canvas.height - 750,
+                y: this.groundY - 350,
                 image: treeImg
             });
 
@@ -374,7 +379,7 @@ this.enemies.push(
             this.smallTrees.push(tree);
         }
 
-        // 🌳 ÁRBOLES GRANDES (solo 3) y: this.canvas.height
+        // 🌳 ÁRBOLES GRANDES (solo 3) y: this.canvas.height 1090
         this.tree_02_List = [];
         const TREE_02_SPACING = 2500;
         const TREE_02_COUNT = 3;
@@ -383,7 +388,7 @@ this.enemies.push(
             this.tree_02_List.push(
                 new Tree_02({
                     x: startX + i * TREE_02_SPACING + 800,
-                    y: this.canvas.height - 640,
+                    y: this.groundY - 240,
                     image: tree_02
                 })
             );
@@ -392,14 +397,14 @@ this.enemies.push(
         // 🧠 FIN DE ÁRBOLES GRANDES
         const endOfBigTrees = startX + (TREE_02_SPACING * TREE_02_COUNT);
 
-        // 🪨 ROCAS GRANDES (solo 2)
+        // 🪨 ROCAS GRANDES (solo 2) 420
         this.bigRocks = [];
         const ROCK_SPACING = 9400;
 
         for (let i = 0; i < 2; i++) {
             const rock = new Rock({
                 x: endOfBigTrees + 800 + i * ROCK_SPACING,
-                y: this.canvas.height - 1090,
+                y: this.groundY - 690,
                 image: rock_1
             });
 
@@ -409,14 +414,14 @@ this.enemies.push(
             this.bigRocks.push(rock);
         }
 
-        // 🌿 GRASS (como suelo)
+        // 🌿 GRASS (como suelo) barWidth = 300
         this.grass = [];
 
         for (let i = 0; i < 60; i++) {
             this.grass.push(
                 new Grass({
                     x: i * this.TILE,
-                    y: this.canvas.height - 420,
+                    y: this.groundY - 20,
                     image: grassIMG
                 })
             );
@@ -428,7 +433,7 @@ this.enemies.push(
 this.foregroundItems.push(
     new ForegroundItem({
         x: plantX, // un poco a la derecha
-        y: -50,  // 🔥 FUERZA visible arriba
+        y: -50,  // 🔥 FUERZA visible arriba 260
         image: plantImg,
         width: 800,
         height: 800
@@ -505,7 +510,7 @@ this.specialTree = new ForegroundItem({
 // 🌳 ÁRBOL ÚNICO EN EL LAGO
 this.lakeTree = new ForegroundItem({
     x: this.lakeX + 300, // ajusta izquierda/derecha
-    y: this.groundY - 330, // altura sobre el suelo
+    y: this.groundY - 330, // altura sobre el suelo  y: this.canvas.height - 750
     image: treeImg,
     width: 400,
     height: 400,
@@ -549,7 +554,7 @@ this.traps.push(
 
 const pendulumAsset = new Image(); 
 
-// 2. IMPORTANTE: Asignar el src de la imagen importada
+// 2. IMPORTANTE: Asignar el src de la imagen importada 750
 pendulumAsset.src = pendulumImage; 
 
 // 3. Pasar el asset ya configurado al PendulumTrap
@@ -647,7 +652,7 @@ this.mountains.draw(this.c, this.worldX * 0.4);
 
 this.farMountains.draw(this.c, this.worldX);
 
-// ⛰️ MONTAÑAS MEDIAS { once: true }
+// ⛰️ MONTAÑAS MEDIAS { once: true } 
 
 
 
@@ -671,7 +676,7 @@ if (this.lakeTree) {
 
 
 
-    // 🟫 SUELO foregroundItems
+    // 🟫 SUELO foregroundItems 640
     const TILE = 400;
 
     this.platforms.forEach(platform => {
@@ -1072,17 +1077,28 @@ const hit =
         }
     });
 
-    // ❤️ VIDA
+    // ❤️ VIDA 
     const maxHP = 100;
     const hp = player.hp;
 
-    const barWidth = 300;
-    const barHeight = 15;
+const scaleX = this.canvas.width / 1920;
+const scaleY = this.canvas.height / 1080;
 
-    const x = 120;
-    const y = 60;
+const barWidth = 300 * scaleX;
+const barHeight = 15 * scaleY;
 
-    this.c.drawImage(this.playerFaceImg, 70, 30, 50, 50);
+const x = 120 * scaleX;
+const y = 60 * scaleY;
+
+const faceSize = 50 * scaleX;
+
+this.c.drawImage(
+    this.playerFaceImg,
+    70 * scaleX,
+    30 * scaleY,
+    faceSize,
+    faceSize
+);
 
     this.c.fillStyle = 'gray';
     this.c.fillRect(x - 1, y - 1, barWidth + 1, barHeight + 1);
@@ -1120,7 +1136,11 @@ if (player.isDead) {
 }
 
 drawEndScreen() {
+
     const c = this.c;
+
+    const scaleX = this.canvas.width / 1920;
+    const scaleY = this.canvas.height / 1080;
 
     c.fillStyle = 'rgba(0,0,0,0.8)';
     c.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -1128,16 +1148,32 @@ drawEndScreen() {
     c.textAlign = 'center';
     c.textBaseline = 'middle';
 
-    c.font = '80px GameFont';
+    c.font = `${80 * scaleX}px GameFont`;
     c.fillStyle = 'white';
-    c.fillText('FIN DE LA DEMO', this.canvas.width / 2, this.canvas.height / 2 - 80);
 
-    c.font = '30px GameFont';
-    c.fillText('Gracias por jugar', this.canvas.width / 2, this.canvas.height / 2);
+    c.fillText(
+        'FIN DE LA DEMO',
+        this.canvas.width / 2,
+        this.canvas.height / 2 - (80 * scaleY)
+    );
 
-    c.font = '25px GameFont';
+    c.font = `${30 * scaleX}px GameFont`;
+
+    c.fillText(
+        'Gracias por jugar',
+        this.canvas.width / 2,
+        this.canvas.height / 2
+    );
+
+    c.font = `${25 * scaleX}px GameFont`;
+
     c.fillStyle = 'gray';
-    c.fillText('Presiona ENTER para volver al menú', this.canvas.width / 2, this.canvas.height / 2 + 80);
+
+    c.fillText(
+        'Presiona ENTER para volver al menú',
+        this.canvas.width / 2,
+        this.canvas.height / 2 + (80 * scaleY)
+    );
 }
 
 handleEndInput(keys) {
