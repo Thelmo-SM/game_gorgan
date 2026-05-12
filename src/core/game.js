@@ -72,7 +72,7 @@ export class Game {
         this.playerFaceImg.src = playerFace;
 
         this.platforms = [];
-        this.worldX = -35000;
+        this.worldX = -2000;
         //this.worldX = -2000;
         //this.worldX = -7000;
         this.scrollSpeed = 5;
