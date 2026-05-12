@@ -18,17 +18,28 @@ html,body{
     background:black;
 }
 
-body{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+body {
+    margin: 0;
+    background: rgb(0, 0, 0);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+    overflow: hidden;
 }
 
-canvas{
-    width:100vw;
-    height:100vh;
-    display:block;
-    object-fit:contain;
+canvas {
+    width: 85vw;
+    height: auto;
+
+    max-width: 1500px;
+    max-height: 800px;
+
+    border: 2px solid #222;
+
+    image-rendering: pixelated;
 }
 </style>
 </head>
