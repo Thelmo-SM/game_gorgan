@@ -70,7 +70,13 @@ export class Game {
         this.isMobile =
         /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+        this.fps = this.isMobile ? 30 : 60;
+        this.frameInterval = 1000 / this.fps;
+        this.lastTime = 0;
+
         this.scale = this.isMobile ? 0.55 : 1;
+
+        this.animate = this.animate.bind(this);
 
         this.background = new Background();
         this.player = new Player();
@@ -213,8 +219,8 @@ if (this.isMobile) {
 
 const dpr = this.isMobile ? 1 : window.devicePixelRatio;
 
-this.canvas.width = 960 * dpr;
-this.canvas.height = 540 * dpr;
+this.canvas.width = 640 * dpr;
+this.canvas.height = 360 * dpr;
 
 this.c.setTransform(1,0,0,1,0,0);
 this.c.scale(dpr, dpr);
@@ -224,8 +230,6 @@ this.c.scale(dpr, dpr);
     this.canvas.width = 1600;
     this.canvas.height = 900;
 }
-// this.canvas.width = window.innerWidth;
-// this.canvas.height = window.innerHeight;
 
     //MENU DEL JUEGO
 this.menu = new Menu({
@@ -393,8 +397,9 @@ this.enemies.push(
         // 🌲 ÁRBOLES PEQUEÑOS
         this.smallTrees = [];
         const TREE_SPACING = 80;
+        const TREE_COUNT = this.isMobile ? 20 : 80;
 
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < TREE_COUNT; i++) {
             const tree = new Tree({
                 x: startX + i * TREE_SPACING,
                 y: this.groundY - 350,
@@ -442,10 +447,11 @@ this.enemies.push(
             this.bigRocks.push(rock);
         }
 
-        // 🌿 GRASS (como suelo) barWidth = 300
+        // 🌿 GRASS (como suelo) barWidth = 300 this.smallTrees.slice(0, 25)
         this.grass = [];
+        const GRASS_COUNT = this.isMobile ? 20 : 60;
 
-        for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < GRASS_COUNT; i++) {
             this.grass.push(
                 new Grass({
                     x: i * this.TILE,
@@ -610,10 +616,17 @@ if (this.isMobile) {
 
 
 
-    animate() {
-        requestAnimationFrame(() => this.animate());
-        
-        this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    animate(timestamp = 0) {
+
+    requestAnimationFrame(this.animate);
+
+    const delta = timestamp - this.lastTime;
+
+    if (delta < this.frameInterval) return;
+
+    this.lastTime = timestamp;
+
+    this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     //MENU DEL JUEGO
     // ✅ MENU
@@ -622,7 +635,7 @@ if (this.gameState === 'MENU') {
     // 🔥 MÚSICA DEL MENÚ
     // if (!this.menuMusicStarted) {
     //     this.music.play(menuMusic, 0.3);
-    //     this.menuMusicStarted = true; movimiento
+    //     this.menuMusicStarted = true; movimiento const waveCount = this.isMobile ? 1 : 5;
     // }
 
     this.menu.update(keys);
@@ -696,12 +709,21 @@ if (!this.isMobile) {
 this.tree_02_List.forEach(tree => tree.draw(this.c, this.worldX * 0.7));
 
 // 🌲 ÁRBOLES PEQUEÑOS (más cerca)
-//this.smallTrees.forEach(tree => tree.draw(this.c, this.worldX * 0.85)); waveCount
+//this.smallTrees.forEach(tree => tree.draw(this.c, this.worldX * 0.85)); waveCount const distancia = Math.sqrt(dx * dx + dy * dy);
 const visibleTrees = this.isMobile
     ? this.smallTrees.slice(0, 25)
     : this.smallTrees;
 
-visibleTrees.forEach(tree => {
+this.smallTrees.forEach(tree => {
+
+    const screenX = tree.position.x + (this.worldX * 0.85);
+
+    const isVisible =
+        screenX > -400 &&
+        screenX < this.canvas.width + 400;
+
+    if (!isVisible) return;
+
     tree.draw(this.c, this.worldX * 0.85);
 });
 
@@ -739,11 +761,20 @@ if (this.lakeTree) {
 
         checkPlatformCollision(player, platformForPlayer);
 
-        this.enemies.forEach(enemy => {
-            if (enemy.hitbox) {
-                checkPlatformCollision(enemy, platform);
-            }
-        });
+this.enemies.forEach(enemy => {
+
+    const enemyScreenX = enemy.position.x + this.worldX;
+
+    const isVisible =
+        enemyScreenX > -500 &&
+        enemyScreenX < this.canvas.width + 500;
+
+    if (!isVisible) return;
+
+    if (enemy.hitbox) {
+        checkPlatformCollision(enemy, platform);
+    }
+});
 
         if (drawX + TILE < 0) {
             platform.position.x += TILE * this.platforms.length;
@@ -789,7 +820,7 @@ this.lakeTree.draw(this.c, this.worldX);
 // Sumamos 19800 para compensar el inicio en -33000 con parallax 0.6
 const lakeX = (this.lake.position.x - 13200) + parallaxOffset;
 const lakeY = this.lake.position.y;
-const waveCount = this.isMobile ? 1 : 5;
+const waveCount = this.isMobile ? 0 : 5;
 
 for (let i = 0; i < waveCount; i++) {
     const wave = Math.sin(this.waveOffset + i * 0.5) * 5;
@@ -868,37 +899,55 @@ if (!this.isMobile) {
 
     //trampas para el juego
 this.traps.forEach(trap => {
+
+    const screenX = trap.position.x + this.worldX;
+
+    const isVisible =
+        screenX > -500 &&
+        screenX < this.canvas.width + 500;
+
+    if (!isVisible) return;
+
     // --- LÓGICA DE VOLUMEN DINÁMICO ---
-    // Calculamos la distancia horizontal entre el player y la trampa
-    // Usamos el centro de la trampa para mayor precisión
     const trapCenterX = trap.position.x + this.worldX + (trap.width / 2);
     const playerCenterX = player.position.x + (player.width / 2);
     
     const distance = Math.abs(trapCenterX - playerCenterX);
-    const maxDistance = 2000; // Radio de audición en píxeles
+    const maxDistance = 2000;
     
-    // Calculamos el volumen: 1 en el centro, 0 a los 1000px
     let dynamicVolume = 1 - (distance / maxDistance);
+
     if (dynamicVolume < 0) dynamicVolume = 0;
 
-    // Pasamos el volumen al update de la trampa
     trap.update(this.c, this.worldX, () => {
         this.soundManager.playTrapSpatial(dynamicVolume);
     });
 
-    // --- RESTO DE TU LÓGICA DE COLISIÓN (IGUAL QUE ANTES) ---
-    const trapHitboxX = trap.position.x + this.worldX + trap.hitbox.offsetX;
-    const trapHitboxY = trap.position.y + (trap.height - trap.hitbox.height);
+    // --- COLISIÓN ---
+    const trapHitboxX =
+        trap.position.x +
+        this.worldX +
+        trap.hitbox.offsetX;
 
-    if (!player.isDead && 
+    const trapHitboxY =
+        trap.position.y +
+        (trap.height - trap.hitbox.height);
+
+    if (
+        !player.isDead &&
         player.position.x < trapHitboxX + trap.hitbox.width &&
         player.position.x + player.width > trapHitboxX &&
         player.position.y < trapHitboxY + trap.hitbox.height &&
         player.position.y + player.height > trapHitboxY
     ) {
         if (trap.isDangerous) {
+
             player.hp = 0;
-            if (typeof this.player.onDeath === 'function') this.player.onDeath();
+
+            if (typeof this.player.onDeath === 'function') {
+                this.player.onDeath();
+            }
+
             player.die();
         }
     }
@@ -934,14 +983,16 @@ this.pendulums.forEach(pendulum => {
             const dx = (player.position.x + player.width / 2) - tipX;
             const dy = (player.position.y + player.height / 2) - tipY;
 
-            const distancia = Math.sqrt(dx * dx + dy * dy);
+            const distanceSquared = dx * dx + dy * dy;
+
+            if (distanceSquared < 22500)
 
             if (distancia < 150) {
                 player.hp = 0;
                 player.die();
             }
 
-            // 🔴 DEBUG (AHORA SÍ SE VA A VER)
+            // 🔴 DEBUG (AHORA SÍ SE VA A VER) this.lasers.forEach((laser, index)
            // this.c.fillStyle = 'red';
            // this.c.fillRect(tipX - 4, tipY - 4, 8, 8); (hit && !item.collected && player.hp < 100)
         });
@@ -956,6 +1007,13 @@ this.pendulums.forEach(pendulum => {
 // 🔥 LASERS (DETRÁS DEL ENEMIGO)
 // =========================
 this.lasers.forEach((laser, index) => {
+
+    const screenX = laser.position.x + this.worldX;
+
+    if (
+        screenX < -500 ||
+        screenX > this.canvas.width + 500
+    ) return;
 
     laser.update(this.c, this.worldX);
 
@@ -1071,7 +1129,7 @@ const hit =
 
 
     // 🌿 FOREGROUND
-// this.foregroundItems.forEach(item => { if (hit && !player.hasHit && isHitFrame)
+// this.foregroundItems.forEach(item => { if (hit && !player.hasHit && isHitFrame) checkPlatformCollision
 //     item.draw(this.c, this.worldX * 1.2);
 // });
 

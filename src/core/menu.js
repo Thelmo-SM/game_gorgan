@@ -134,13 +134,13 @@ export class Menu {
 
             c.font = '25px GameFont';
             c.fillText(
-                'Desarrollado por Thelmo',
+                'Desarrollado por Thelmo-SM',
                 this.canvas.width / 2,
                 this.canvas.height / 2
             );
 
             c.fillText(
-                'Frontend Developer',
+                'Desarrollador Web',
                 this.canvas.width / 2,
                 this.canvas.height / 2 + 40
             );
