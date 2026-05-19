@@ -588,7 +588,7 @@ this.traps.push(
 
 const pendulumAsset = new Image(); 
 
-// 2. IMPORTANTE: Asignar el src de la imagen importada 750
+// 2. IMPORTANTE: Asignar el src de la imagen importada 750 visibleTrees
 pendulumAsset.src = pendulumImage; 
 
 // 3. Pasar el asset ya configurado al PendulumTrap
@@ -714,7 +714,7 @@ const visibleTrees = this.isMobile
     ? this.smallTrees.slice(0, 25)
     : this.smallTrees;
 
-this.smallTrees.forEach(tree => {
+visibleTrees.forEach(tree => {
 
     const screenX = tree.position.x + (this.worldX * 0.85);
 
