@@ -213,14 +213,14 @@ new HealingItem({
 
 
 //TAMAÑO DE PANTALLAS
-//TAMAÑO DE PANTALLAS tree.width = 250;
+//TAMAÑO DE PANTALLAS tree.width = 250; TREE_COUNT
 
 if (this.isMobile) {
 
 const dpr = this.isMobile ? 1 : window.devicePixelRatio;
 
-this.canvas.width = 640 * dpr;
-this.canvas.height = 360 * dpr;
+this.canvas.width = 480 * dpr;
+this.canvas.height = 220 * dpr;
 
 this.c.setTransform(1,0,0,1,0,0);
 this.c.scale(dpr, dpr);
@@ -397,7 +397,7 @@ this.enemies.push(
         // 🌲 ÁRBOLES PEQUEÑOS
         this.smallTrees = [];
         const TREE_SPACING = 80;
-        const TREE_COUNT = this.isMobile ? 20 : 80;
+        const TREE_COUNT = this.isMobile ? 8 : 80;
 
         for (let i = 0; i < TREE_COUNT; i++) {
             const tree = new Tree({
@@ -412,7 +412,7 @@ this.enemies.push(
             this.smallTrees.push(tree);
         }
 
-        // 🌳 ÁRBOLES GRANDES (solo 3) y: this.canvas.height 1090
+        // 🌳 ÁRBOLES GRANDES (solo 3) y: this.canvas.height 1090 GRASS_COUNT
         this.tree_02_List = [];
         const TREE_02_SPACING = 2500;
         const TREE_02_COUNT = 3;
@@ -449,7 +449,7 @@ this.enemies.push(
 
         // 🌿 GRASS (como suelo) barWidth = 300 this.smallTrees.slice(0, 25)
         this.grass = [];
-        const GRASS_COUNT = this.isMobile ? 20 : 60;
+        const GRASS_COUNT = this.isMobile ? 5 : 60;
 
         for (let i = 0; i < GRASS_COUNT; i++) {
             this.grass.push(
@@ -616,7 +616,8 @@ if (this.isMobile) {
 
 
 
-    animate(timestamp = 0) {
+    //animate(timestamp = 0) { distanceSquared 
+     animate(timestamp = 0) { 
 
     requestAnimationFrame(this.animate);
 
@@ -624,7 +625,7 @@ if (this.isMobile) {
 
     if (delta < this.frameInterval) return;
 
-    this.lastTime = timestamp;
+    //this.lastTime = timestamp;
 
     this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -980,17 +981,15 @@ this.pendulums.forEach(pendulum => {
             const tipY = pendulum.screenHammerPos.y 
                 + Math.cos(pendulum.angle) * offset;
 
-            const dx = (player.position.x + player.width / 2) - tipX;
-            const dy = (player.position.y + player.height / 2) - tipY;
+                const dx = (player.position.x + player.width / 2) - tipX;
+                const dy = (player.position.y + player.height / 2) - tipY;
 
-            const distanceSquared = dx * dx + dy * dy;
+                const distanceSquared = dx * dx + dy * dy;
 
-            if (distanceSquared < 22500)
-
-            if (distancia < 150) {
-                player.hp = 0;
-                player.die();
-            }
+                if (distanceSquared < 22500) {
+                    player.hp = 0;
+                    player.die();
+                }
 
             // 🔴 DEBUG (AHORA SÍ SE VA A VER) this.lasers.forEach((laser, index)
            // this.c.fillStyle = 'red';
